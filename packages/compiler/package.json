@@ -26,13 +26,14 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
-    "@tailwindcss/vite": "^4.3.3",
+    "hast": "^1.0.0",
     "hast-util-to-jsx-runtime": "^2.3.6",
     "hast-util-to-text": "^4.0.2",
     "rehype-parse": "^9.0.1",
     "rehype-stringify": "^10.0.1",
-    "tailwindcss": "^4.3.3",
-    "unified": "^11.0.5"
+    "unified": "^11.0.5",
+    "unist-util-visit": "^5.0.0",
+    "prettier": "^3.6.2"
   },
   "devDependencies": {
     "@types/node": "^24.13.3",
