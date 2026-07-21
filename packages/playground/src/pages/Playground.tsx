@@ -1,6 +1,7 @@
 import { useState } from "react";
-import { compile } from "../../../compiler/src/compiler";
-import { generateComponent } from "../../../compiler/src/generators/components";
+// import { compile } from "../../../compiler/src/compiler";
+import { compile } from "@html-to-puck/compiler/src/compiler";
+import { generateComponent } from "@html-to-puck/compiler/src/generators/components";
 
 function App() {
   const [html, setHtml] = useState("");
