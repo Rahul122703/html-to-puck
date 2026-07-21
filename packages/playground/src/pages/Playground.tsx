@@ -6,6 +6,7 @@ import { generateComponent } from "@html-to-puck/compiler/src/generators/compone
 function App() {
   const [html, setHtml] = useState("");
   const [generatedCode, setGeneratedCode] = useState("");
+  const [copied, setCopied] = useState(false);
 
   const handleConvert = async () => {
     const { tree, context } = compile(html);
@@ -15,49 +16,76 @@ function App() {
       context,
     );
     setGeneratedCode(result);
+    setCopied(false);
+  };
+
+  const handleCopy = async () => {
+    if (!generatedCode) return;
+
+    try {
+      await navigator.clipboard.writeText(generatedCode);
+      setCopied(true);
+
+      window.setTimeout(() => {
+        setCopied(false);
+      }, 1800);
+    } catch (error) {
+      console.error("Failed to copy code:", error);
+    }
   };
 
   return (
-    <main className='min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-100'>
-      <div className='mx-auto max-w-[1700px] px-6 py-8'>
-        {/* Header */}
-        <div className='mb-8 flex flex-col gap-3'>
-          <span className='w-fit rounded-full border border-blue-200 bg-blue-50 px-4 py-1 text-sm font-medium text-blue-700'>
-            HTML → Puck Converter
-          </span>
+    <main className='h-screen overflow-hidden bg-gradient-to-br from-slate-50 via-white to-slate-100'>
+      <div className='flex h-full flex-col p-4 sm:p-5'>
+        {/* Compact Top Bar */}
+        <header className='mb-4 flex shrink-0 items-center justify-between gap-3 rounded-2xl border border-slate-200/80 bg-white/80 px-4 py-3 shadow-sm backdrop-blur'>
+          <div className='flex items-center gap-3'>
+            <div className='rounded-full border border-blue-200 bg-blue-50 px-3 py-1 text-xs font-semibold tracking-wide text-blue-700'>
+              HTML → PUCK
+            </div>
+            <div className='hidden sm:block'>
+              <h1 className='text-sm font-semibold text-slate-900'>
+                HTML to Puck Playground
+              </h1>
+            </div>
+          </div>
 
-          <h1 className='text-4xl font-bold tracking-tight text-slate-900'>
-            HTML to Puck Playground
-          </h1>
+          <div className='flex items-center gap-2'>
+            <button
+              onClick={handleCopy}
+              disabled={!generatedCode}
+              className='inline-flex items-center justify-center rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50'
+            >
+              {copied ? "Copied!" : "Copy"}
+            </button>
 
-          <p className='max-w-3xl text-slate-600'>
-            Paste your static HTML, convert it into a fully editable Puck
-            ComponentConfig, and inspect the generated TypeScript instantly.
-          </p>
-        </div>
+            <button
+              onClick={handleConvert}
+              className='inline-flex items-center justify-center rounded-xl bg-blue-600 px-5 py-2 text-sm font-semibold text-white transition hover:bg-blue-700 active:scale-[0.99]'
+            >
+              Convert to Puck
+            </button>
+          </div>
+        </header>
 
         {/* Main Layout */}
-        <div className='grid grid-cols-1 gap-6 xl:grid-cols-2'>
+        <div className='grid min-h-0 flex-1 grid-cols-1 gap-4 xl:grid-cols-2'>
           {/* HTML Panel */}
-          <section className='overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm'>
-            {/* Header */}
-            <div className='flex items-center justify-between border-b border-slate-200 px-6 py-4'>
+          <section className='flex min-h-0 flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm'>
+            <div className='flex shrink-0 items-center justify-between border-b border-slate-200 px-5 py-3'>
               <div>
-                <h2 className='text-lg font-semibold text-slate-900'>
+                <h2 className='text-sm font-semibold text-slate-900'>
                   HTML Input
                 </h2>
-                <p className='mt-1 text-sm text-slate-500'>
-                  Paste the HTML you want to convert.
-                </p>
+                <p className='text-xs text-slate-500'>Paste your HTML here.</p>
               </div>
 
-              <div className='rounded-lg bg-slate-100 px-3 py-1 text-xs font-medium text-slate-600'>
+              <span className='rounded-lg bg-slate-100 px-2.5 py-1 text-[11px] font-medium text-slate-600'>
                 HTML
-              </div>
+              </span>
             </div>
 
-            {/* Editor */}
-            <div className='p-6'>
+            <div className='flex min-h-0 flex-1 p-4'>
               <textarea
                 value={html}
                 onChange={(e) => setHtml(e.target.value)}
@@ -66,50 +94,35 @@ function App() {
   <p>This is my website.</p>
 </section>`}
                 spellCheck={false}
-                className='h-[600px] w-full resize-none rounded-xl border border-slate-300 bg-slate-50 p-5 font-mono text-[14px] leading-7 text-slate-800 outline-none transition-all duration-200 placeholder:text-slate-400 focus:border-blue-500 focus:bg-white focus:ring-4 focus:ring-blue-100'
+                className='h-full w-full min-h-0 resize-none rounded-xl border border-slate-300 bg-slate-50 p-4 font-mono text-[14px] leading-6 text-slate-800 outline-none transition placeholder:text-slate-400 focus:border-blue-500 focus:bg-white focus:ring-4 focus:ring-blue-100/70'
               />
-
-              <div className='mt-5 flex items-center justify-between'>
-                <p className='text-sm text-slate-500'>
-                  Supports HTML with Tailwind CSS classes.
-                </p>
-
-                <button
-                  onClick={handleConvert}
-                  className='inline-flex items-center gap-2 rounded-xl bg-blue-600 px-6 py-3 text-sm font-semibold text-white transition-all duration-200 hover:bg-blue-700 active:scale-[0.98]'
-                >
-                  Convert to Puck
-                </button>
-              </div>
             </div>
           </section>
 
           {/* Output Panel */}
-          <section className='overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm'>
-            {/* Header */}
-            <div className='flex items-center justify-between border-b border-slate-200 px-6 py-4'>
+          <section className='flex min-h-0 flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm'>
+            <div className='flex shrink-0 items-center justify-between border-b border-slate-200 px-5 py-3'>
               <div>
-                <h2 className='text-lg font-semibold text-slate-900'>
+                <h2 className='text-sm font-semibold text-slate-900'>
                   Generated Component
                 </h2>
-                <p className='mt-1 text-sm text-slate-500'>
-                  Generated TypeScript ComponentConfig.
+                <p className='text-xs text-slate-500'>
+                  TypeScript output appears here.
                 </p>
               </div>
 
-              <div className='rounded-lg bg-emerald-100 px-3 py-1 text-xs font-medium text-emerald-700'>
+              <span className='rounded-lg bg-emerald-100 px-2.5 py-1 text-[11px] font-medium text-emerald-700'>
                 TSX
-              </div>
+              </span>
             </div>
 
-            {/* Editor */}
-            <div className='p-6'>
+            <div className='flex min-h-0 flex-1 p-4'>
               <textarea
                 value={generatedCode}
                 readOnly
                 spellCheck={false}
                 placeholder='// Your generated Puck component will appear here...'
-                className='h-[656px] w-full resize-none rounded-xl border border-slate-300 bg-slate-900 p-5 font-mono text-[14px] leading-7 text-green-300 outline-none placeholder:text-slate-500'
+                className='h-full w-full min-h-0 resize-none rounded-xl border border-slate-300 bg-slate-950 p-4 font-mono text-[14px] leading-6 text-emerald-300 outline-none placeholder:text-slate-500'
               />
             </div>
           </section>

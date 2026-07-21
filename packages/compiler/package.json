@@ -11,7 +11,7 @@
   ],
   "scripts": {
     "dev": "tsx src/index.ts",
-    "build": "tsup src/index.ts --format esm,cjs --dts",
+    "build": "tsup src/index.ts --format esm --dts",
     "watch": "tsup src/index.ts --watch --format esm,cjs --dts",
     "lint": "eslint src --ext .ts",
     "format": "prettier --write \"src/**/*.ts\""
