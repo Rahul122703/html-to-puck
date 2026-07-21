@@ -1,5 +1,5 @@
 import { visit } from "unist-util-visit";
-import { type CompilerContext } from "../types";
+import { CompilerContext } from "../types";
 import { getUniqueName } from "../utils/naming";
 
 export function visitImages(tree: any, context: CompilerContext) {
@@ -14,7 +14,9 @@ export function visitImages(tree: any, context: CompilerContext) {
 
       context.fields.push({
         name,
-        type: "text",
+        config: {
+          type: "text",
+        },
         defaultValue: String(src),
       });
 
@@ -26,7 +28,9 @@ export function visitImages(tree: any, context: CompilerContext) {
 
       context.fields.push({
         name,
-        type: "text",
+        config: {
+          type: "text",
+        },
         defaultValue: String(alt),
       });
 

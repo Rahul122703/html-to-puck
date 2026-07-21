@@ -1,4 +1,7 @@
-import type { Element, Root, Text } from "hast";
+import { Element, Root, Text } from "hast";
+import { getOrCreateRootElement } from "../utils/getOrCreateRootElement";
+import { mergeProperties } from "../utils/mergeProperties";
+import { JsxExpression } from "../utils/jsx";
 
 const VOID_ELEMENTS = new Set([
   "area",
@@ -25,6 +28,44 @@ export function generateRender(
   componentName: string,
   fields: Field[],
 ) {
+  const root = getOrCreateRootElement(tree);
+
+  mergeProperties(root, {
+    style: new JsxExpression(`{
+      position: "relative",
+      backgroundColor,
+      ...(showBackgroundImage && backgroundImage
+        ? {
+            backgroundImage: \`url(\${backgroundImage})\`,
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+            backgroundRepeat: "no-repeat",
+          }
+        : {}),
+    }`),
+  });
+
+  // Save existing children
+  const children = root.children;
+
+  // Overlay placeholder
+  const overlay: Text = {
+    type: "text",
+    value: "{{__ROOT_OVERLAY__}}",
+  };
+
+  // Wrapper
+  const wrapper: Element = {
+    type: "element",
+    tagName: "div",
+    properties: {
+      style: "__CONTENT_WRAPPER_STYLE__",
+    },
+    children,
+  };
+
+  root.children = [overlay, wrapper];
+
   const jsx = print(tree);
 
   const props = fields.map((field) => `  ${field.name},`).join("\n");
@@ -68,6 +109,21 @@ function printElement(node: Element): string {
 }
 
 function printText(node: Text): string {
+  if (node.value === "{{__ROOT_OVERLAY__}}") {
+    return `{showBackgroundOverlay && (
+  <div
+    style={{
+      position: "absolute",
+      inset: 0,
+      backgroundColor: backgroundOverlayColor,
+      opacity: backgroundOverlayOpacity / 100,
+      pointerEvents: "none",
+      zIndex: 0,
+    }}
+  />
+)}`;
+  }
+
   return node.value.replace(/\{\{(.*?)\}\}/g, "{$1}");
 }
 
@@ -84,6 +140,17 @@ function printProps(props: Record<string, any>) {
 
       if (key === "for") {
         key = "htmlFor";
+      }
+
+      if (value instanceof JsxExpression) {
+        return ` ${key}={${value.code}}`;
+      }
+
+      if (key === "style" && value === "__CONTENT_WRAPPER_STYLE__") {
+        return ` style={{
+    position: "relative",
+    zIndex: 1,
+  }}`;
       }
 
       if (value === true) {

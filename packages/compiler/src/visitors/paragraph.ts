@@ -18,7 +18,10 @@ export function visitParagraphs(tree: any, context: CompilerContext) {
 
     context.fields.push({
       name,
-      type: "richText",
+      config: {
+        type: "richtext",
+        contentEditable: true,
+      },
       defaultValue: text,
     });
 

@@ -1,16 +1,17 @@
-import { type CompilerContext } from "../types";
+import { CompilerContext } from "../types";
 
 const TYPE_MAP = {
   text: "string",
-  richText: "string",
+  richtext: "string",
   image: "string",
   color: "string",
   boolean: "boolean",
   number: "number",
+  radio: "string",
 } as const;
 
 export function generateProps(context: CompilerContext) {
   return context.fields
-    .map((field) => `${field.name}: ${TYPE_MAP[field.type]};`)
+    .map((field) => `${field.name}: ${TYPE_MAP[field.config.type]};`)
     .join("\n");
 }

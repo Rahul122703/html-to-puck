@@ -1,8 +1,6 @@
 import { format } from "prettier";
-import estreePlugin from "prettier/plugins/estree";
-import typescriptPlugin from "prettier/plugins/typescript";
 
-import { type CompilerContext } from "../types";
+import { CompilerContext } from "../types";
 import { generateProps } from "./props";
 import { generateRender } from "./render";
 import { generateFields } from "./fields";
@@ -37,7 +35,6 @@ ${render}
 `;
 
   return await format(source, {
-    plugins: [typescriptPlugin, estreePlugin],
     parser: "typescript",
     semi: true,
     singleQuote: true,

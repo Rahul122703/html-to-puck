@@ -1,7 +1,7 @@
 import { visit } from "unist-util-visit";
 import { toText } from "hast-util-to-text";
 
-import { type CompilerContext } from "../types";
+import { CompilerContext } from "../types";
 import { getUniqueName } from "../utils/naming";
 
 const TEXT_TAGS: Record<string, string> = {
@@ -38,7 +38,10 @@ export function visitText(tree: any, context: CompilerContext) {
 
     context.fields.push({
       name: fieldName,
-      type: "richText",
+      config: {
+        type: "richtext",
+        contentEditable: true,
+      },
       defaultValue: text,
     });
 

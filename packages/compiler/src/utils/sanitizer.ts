@@ -1,4 +1,4 @@
-import type { Element, Root, Parent } from "hast";
+import { Element, Root, Parent } from "hast";
 import { visit } from "unist-util-visit";
 
 const WRAPPER_CLASSES = new Set([

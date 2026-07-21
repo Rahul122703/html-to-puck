@@ -22,7 +22,9 @@ export function visitHeadings(tree: any, context: CompilerContext) {
 
     context.fields.push({
       name,
-      type: "richText",
+      config: {
+        type: "text",
+      },
       defaultValue: text,
     });
 

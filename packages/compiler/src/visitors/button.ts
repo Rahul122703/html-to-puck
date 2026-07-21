@@ -1,5 +1,5 @@
 import { visit } from "unist-util-visit";
-import { type CompilerContext } from "../types";
+import { CompilerContext } from "../types";
 import { getUniqueName } from "../utils/naming";
 
 export function visitButtons(tree: any, context: CompilerContext) {
@@ -18,7 +18,10 @@ export function visitButtons(tree: any, context: CompilerContext) {
 
     context.fields.push({
       name,
-      type: "text",
+      config: {
+        type: "richtext",
+        contentEditable: true,
+      },
       defaultValue: text,
     });
 

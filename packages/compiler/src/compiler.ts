@@ -5,14 +5,16 @@ import { visitImages } from "./visitors/image";
 import { visitLinks } from "./visitors/link";
 import { visitButtons } from "./visitors/button";
 import { sanitize } from "./utils/sanitizer";
+import { resetUniqueNames } from "./utils/naming";
 
 const visitors = [visitText, visitImages, visitLinks, visitButtons];
 
 export function compile(html: string) {
   const tree = parse(html);
 
-  console.log(tree.type);   
+  console.log(tree.type);
   console.log(tree);
+  resetUniqueNames();
 
   const context = createContext();
   const cleanedTree = sanitize(tree);

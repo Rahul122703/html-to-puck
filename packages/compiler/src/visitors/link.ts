@@ -1,5 +1,5 @@
 import { visit } from "unist-util-visit";
-import { type CompilerContext } from "../types";
+import { CompilerContext } from "../types";
 import { getUniqueName } from "../utils/naming";
 
 export function visitLinks(tree: any, context: CompilerContext) {
@@ -13,7 +13,9 @@ export function visitLinks(tree: any, context: CompilerContext) {
 
       context.fields.push({
         name: hrefName,
-        type: "text",
+        config: {
+          type: "text",
+        },
         defaultValue: String(href),
       });
 
@@ -31,7 +33,10 @@ export function visitLinks(tree: any, context: CompilerContext) {
 
       context.fields.push({
         name: textName,
-        type: "richText",
+        config: {
+          type: "richtext",
+          contentEditable: true,
+        },
         defaultValue: text,
       });
 

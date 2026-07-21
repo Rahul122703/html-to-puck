@@ -18,7 +18,10 @@ export function visitSpans(tree: any, context: CompilerContext) {
 
     context.fields.push({
       name,
-      type: "richText",
+      config: {
+        type: "richtext",
+        contentEditable: true,
+      },
       defaultValue: text,
     });
 
