@@ -172,8 +172,8 @@ function printProps(props: Record<string, any>) {
           }}`;
         }
 
-        if (typeof value === "string") {
-          return ` style=${cssStringToJsxStyle(value)}`;
+        if (key === "style" && typeof value === "string") {
+          return ` style={${cssStringToJsxStyle(value)}}`;
         }
       }
 
