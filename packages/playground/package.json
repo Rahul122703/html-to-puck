@@ -1,5 +1,5 @@
 {
-  "name": "playground",
+  "name": "@html-to-puck/playground",
   "private": true,
   "version": "0.0.0",
   "type": "module",

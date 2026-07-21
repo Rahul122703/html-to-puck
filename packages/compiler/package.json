@@ -1,5 +1,5 @@
 {
-  "name": "html-to-puck",
+  "name": "@html-to-puck/compiler",
   "version": "0.1.0",
   "description": "Convert static HTML into editable Puck components",
   "type": "module",
