@@ -7,7 +7,7 @@ function cssPropertyToJs(property: string) {
   return property.replace(/-([a-z])/g, (_, c) => c.toUpperCase());
 }
 
-function cssStringToJsxStyle(style: string) {
+export function cssStringToJsxStyle(style: string) {
   const entries = style
     .split(";")
     .map((rule) => rule.trim())

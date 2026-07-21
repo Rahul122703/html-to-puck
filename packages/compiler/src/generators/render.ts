@@ -1,6 +1,7 @@
 import type { Element, Root, Text } from "hast";
 import { getOrCreateRootElement } from "../utils/getOrCreateRootElement";
 import { mergeProperties } from "../utils/mergeProperties";
+import { cssStringToJsxStyle } from "../utils/cssStringToJsxStyle";
 import { JsxExpression } from "../utils/jsx";
 
 const VOID_ELEMENTS = new Set([
