@@ -34,7 +34,7 @@ export const rootConfig: RootConfig = {
           },
         ],
       },
-      defaultValue: "No",
+      defaultValue: false,
     },
     {
       name: "showBackgroundOverlay",
@@ -52,7 +52,7 @@ export const rootConfig: RootConfig = {
           },
         ],
       },
-      defaultValue: "No",
+      defaultValue: false,
     },
     {
       name: "backgroundOverlayColor",
