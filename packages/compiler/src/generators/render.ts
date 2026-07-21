@@ -130,8 +130,14 @@ function printText(node: Text): string {
 function printProps(props: Record<string, any>) {
   return Object.entries(props)
     .map(([key, value]) => {
-      if (key.startsWith("data")) {
-        return "";
+      // Convert ariaLabel -> aria-label
+      if (/^aria[A-Z]/.test(key)) {
+        key = key.replace(/[A-Z]/g, (m) => `-${m.toLowerCase()}`);
+      }
+
+      // Convert dataMotionId -> data-motion-id
+      if (/^data[A-Z]/.test(key)) {
+        key = key.replace(/[A-Z]/g, (m) => `-${m.toLowerCase()}`);
       }
 
       if (key === "class" || key === "className") {
@@ -146,11 +152,17 @@ function printProps(props: Record<string, any>) {
         return ` ${key}={${value.code}}`;
       }
 
-      if (key === "style" && value === "__CONTENT_WRAPPER_STYLE__") {
-        return ` style={{
-    position: "relative",
-    zIndex: 1,
-  }}`;
+      if (key === "style") {
+        if (value === "__CONTENT_WRAPPER_STYLE__") {
+          return ` style={{
+            position: "relative",
+            zIndex: 1,
+          }}`;
+        }
+
+        if (typeof value === "string") {
+          return ` style=${cssStringToJsxStyle(value)}`;
+        }
       }
 
       if (value === true) {
