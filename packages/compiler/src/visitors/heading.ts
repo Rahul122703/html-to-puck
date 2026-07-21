@@ -1,5 +1,5 @@
 import { visit } from "unist-util-visit";
-import { CompilerContext } from "../types";
+import { type CompilerContext } from "../types";
 
 export function visitHeadings(tree: any, context: CompilerContext) {
   let count = 1;

@@ -1,4 +1,4 @@
-import { RootConfig } from "./types";
+import { type RootConfig } from "./types";
 
 export const rootConfig: RootConfig = {
   fields: [

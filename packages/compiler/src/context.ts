@@ -1,5 +1,5 @@
 import { rootConfig } from "./rootConfig";
-import { CompilerContext } from "./types";
+import { type CompilerContext } from "./types";
 
 export function createContext(): CompilerContext {
   return {

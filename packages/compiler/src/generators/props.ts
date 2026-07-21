@@ -1,4 +1,4 @@
-import { CompilerContext } from "../types";
+import { type CompilerContext } from "../types";
 
 const TYPE_MAP = {
   text: "string",
