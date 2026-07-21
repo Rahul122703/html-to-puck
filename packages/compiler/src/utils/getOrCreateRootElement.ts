@@ -1,4 +1,4 @@
-import { Element, ElementContent, Root, Text } from "hast";
+import type { Element, ElementContent, Root, Text } from "hast";
 
 export function getOrCreateRootElement(tree: Root): Element {
   const children = tree.children.filter((child) => {

@@ -1,4 +1,4 @@
-import { Element, Root, Text } from "hast";
+import type { Element, Root, Text } from "hast";
 import { getOrCreateRootElement } from "../utils/getOrCreateRootElement";
 import { mergeProperties } from "../utils/mergeProperties";
 import { JsxExpression } from "../utils/jsx";
