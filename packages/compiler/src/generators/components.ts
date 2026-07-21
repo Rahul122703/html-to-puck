@@ -2,7 +2,7 @@ import { format } from "prettier";
 import estreePlugin from "prettier/plugins/estree";
 import typescriptPlugin from "prettier/plugins/typescript";
 
-import { CompilerContext } from "../types";
+import { type CompilerContext } from "../types";
 import { generateProps } from "./props";
 import { generateRender } from "./render";
 import { generateFields } from "./fields";

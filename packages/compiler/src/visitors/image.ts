@@ -1,5 +1,5 @@
 import { visit } from "unist-util-visit";
-import { CompilerContext } from "../types";
+import { type CompilerContext } from "../types";
 import { getUniqueName } from "../utils/naming";
 
 export function visitImages(tree: any, context: CompilerContext) {

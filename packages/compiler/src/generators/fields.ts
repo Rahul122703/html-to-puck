@@ -1,4 +1,4 @@
-import { CompilerContext } from "../types";
+import { type CompilerContext } from "../types";
 
 export function generateFields(context: CompilerContext) {
   return JSON.stringify(

@@ -1,7 +1,7 @@
 import { visit } from "unist-util-visit";
 import { toText } from "hast-util-to-text";
 
-import { CompilerContext } from "../types";
+import { type CompilerContext } from "../types";
 import { getUniqueName } from "../utils/naming";
 
 const TEXT_TAGS: Record<string, string> = {

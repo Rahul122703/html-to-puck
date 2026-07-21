@@ -1,4 +1,4 @@
-import { Element, Root, Text } from "hast";
+import type { Element, Root, Text } from "hast";
 
 const VOID_ELEMENTS = new Set([
   "area",
