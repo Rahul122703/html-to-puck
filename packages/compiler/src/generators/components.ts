@@ -1,6 +1,6 @@
 import { format } from "prettier";
 
-import { CompilerContext } from "../types";
+import { type CompilerContext } from "../types";
 import { generateProps } from "./props";
 import { generateRender } from "./render";
 import { generateFields } from "./fields";
