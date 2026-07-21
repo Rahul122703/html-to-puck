@@ -1,4 +1,6 @@
-import { format } from "prettier";
+import { format } from "prettier/standalone";
+import * as parserTypeScript from "prettier/plugins/typescript";
+import * as parserEstree from "prettier/plugins/estree";
 
 import { type CompilerContext } from "../types";
 import { generateProps } from "./props";
@@ -36,6 +38,7 @@ ${render}
 
   return await format(source, {
     parser: "typescript",
+    plugins: [parserTypeScript, parserEstree],
     semi: true,
     singleQuote: true,
     trailingComma: "all",
