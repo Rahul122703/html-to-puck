@@ -26,17 +26,7 @@ const WRAPPER_CLASSES = new Set([
   "animate-line",
 ]);
 
-const ANIMATION_STYLE_PROPS = new Set([
-  "opacity",
-  "transform",
-  "filter",
-  "animation",
-  "transition",
-  "will-change",
-  "translate",
-  "rotate",
-  "scale",
-]);
+const ANIMATION_STYLE_PROPS = new Set();
 
 interface UnwrapOperation {
   parent: Parent;
