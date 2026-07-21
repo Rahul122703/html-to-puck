@@ -72,5 +72,77 @@ export const rootConfig: RootConfig = {
       },
       defaultValue: 40,
     },
+
+    // Padding
+    {
+      name: "paddingTop",
+      propType: "number",
+      config: {
+        type: "number",
+        min: 0,
+      },
+      defaultValue: 0,
+    },
+    {
+      name: "paddingRight",
+      propType: "number",
+      config: {
+        type: "number",
+        min: 0,
+      },
+      defaultValue: 0,
+    },
+    {
+      name: "paddingBottom",
+      propType: "number",
+      config: {
+        type: "number",
+        min: 0,
+      },
+      defaultValue: 0,
+    },
+    {
+      name: "paddingLeft",
+      propType: "number",
+      config: {
+        type: "number",
+        min: 0,
+      },
+      defaultValue: 0,
+    },
+
+    // Margin
+    {
+      name: "marginTop",
+      propType: "number",
+      config: {
+        type: "number",
+      },
+      defaultValue: 0,
+    },
+    {
+      name: "marginRight",
+      propType: "number",
+      config: {
+        type: "number",
+      },
+      defaultValue: 0,
+    },
+    {
+      name: "marginBottom",
+      propType: "number",
+      config: {
+        type: "number",
+      },
+      defaultValue: 0,
+    },
+    {
+      name: "marginLeft",
+      propType: "number",
+      config: {
+        type: "number",
+      },
+      defaultValue: 0,
+    },
   ],
 };

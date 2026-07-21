@@ -34,6 +34,17 @@ export function generateRender(
     style: new JsxExpression(`{
       position: "relative",
       backgroundColor,
+
+      paddingTop: \`\${paddingTop}px\`,
+      paddingRight: \`\${paddingRight}px\`,
+      paddingBottom: \`\${paddingBottom}px\`,
+      paddingLeft: \`\${paddingLeft}px\`,
+
+      marginTop: \`\${marginTop}px\`,
+      marginRight: \`\${marginRight}px\`,
+      marginBottom: \`\${marginBottom}px\`,
+      marginLeft: \`\${marginLeft}px\`,
+
       ...(showBackgroundImage && backgroundImage
         ? {
             backgroundImage: \`url(\${backgroundImage})\`,
