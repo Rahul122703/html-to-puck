@@ -1,3 +1,3 @@
-export class JsxExpression {
+export class CodeExpression {
   constructor(public code: string) {}
 }

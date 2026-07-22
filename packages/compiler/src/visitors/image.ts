@@ -14,6 +14,7 @@ export function visitImages(tree: any, context: CompilerContext) {
 
       context.fields.push({
         name,
+        propType: "string",
         config: {
           type: "text",
         },
@@ -28,6 +29,7 @@ export function visitImages(tree: any, context: CompilerContext) {
 
       context.fields.push({
         name,
+        propType: "string",
         config: {
           type: "text",
         },

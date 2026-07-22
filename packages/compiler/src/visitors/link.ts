@@ -1,6 +1,7 @@
 import { visit } from "unist-util-visit";
 import { type CompilerContext } from "../types";
 import { getUniqueName } from "../utils/naming";
+import { humanize } from "../utils/humanize";
 
 export function visitLinks(tree: any, context: CompilerContext) {
   visit(tree, "element", (node: any) => {
@@ -13,6 +14,7 @@ export function visitLinks(tree: any, context: CompilerContext) {
 
       context.fields.push({
         name: hrefName,
+        propType: "string",
         config: {
           type: "text",
         },
@@ -33,10 +35,12 @@ export function visitLinks(tree: any, context: CompilerContext) {
 
       context.fields.push({
         name: textName,
+        propType: "string",
         config: {
+          label: humanize(textName),
           type: "richtext",
-          contentEditable: true,
         },
+        richTextImport: true,
         defaultValue: text,
       });
 

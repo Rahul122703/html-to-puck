@@ -1,19 +1,37 @@
 import { type CompilerContext } from "../types";
+import { CodeExpression } from "../utils/jsx";
 
 export function generateFields(context: CompilerContext) {
-  return serializeObject(
-    Object.fromEntries(
-      context.fields.map((field) => [field.name, field.config]),
-    ),
+  const fields = Object.fromEntries(
+    context.fields.map((field) => {
+      if (field.config instanceof CodeExpression) {
+        return [field.name, field.config];
+      }
+
+      const config = { ...field.config };
+
+      if (field.richTextImport) {
+        Object.defineProperty(config, "__spread", {
+          enumerable: true,
+          value: "richTextNoHeading",
+        });
+      }
+
+      return [field.name, config];
+    }),
   );
+
+  return serializeObject(fields);
 }
 
 function serialize(value: unknown, indent = 0): string {
   const pad = "  ".repeat(indent);
 
-  if (value === null) {
-    return "null";
+  if (value instanceof CodeExpression) {
+    return value.code.trim();
   }
+
+  if (value === null) return "null";
 
   if (typeof value === "string") {
     return JSON.stringify(value);
@@ -43,7 +61,13 @@ function serializeObject(obj: Record<string, unknown>, indent = 0): string {
 
   return `{
 ${Object.entries(obj)
-  .map(([key, value]) => `${pad}  ${key}: ${serialize(value, indent + 1)}`)
+  .map(([key, value]) => {
+    if (key === "__spread") {
+      return `${pad}  ...${value}`;
+    }
+
+    return `${pad}  ${key}: ${serialize(value, indent + 1)}`;
+  })
   .join(",\n")}
 ${pad}}`;
 }

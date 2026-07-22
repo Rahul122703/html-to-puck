@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 // import { compile } from "../../../compiler/src/compiler";
 import { compile } from "@html-to-puck/compiler/src/compiler";
 import { generateComponent } from "@html-to-puck/compiler/src/generators/components";
@@ -7,16 +7,32 @@ function App() {
   const [html, setHtml] = useState("");
   const [generatedCode, setGeneratedCode] = useState("");
   const [copied, setCopied] = useState(false);
+  const [componentName, setComponentName] = useState("Playground");
 
   const handleConvert = async () => {
+    await generate();
+  };
+
+  useEffect(() => {
+    if (!html.trim()) return;
+
+    const timer = setTimeout(() => {
+      void generate();
+    }, 300);
+
+    return () => clearTimeout(timer);
+  }, [html, componentName]);
+
+  const generate = async () => {
     const { tree, context } = compile(html);
-    const result = await generateComponent(
-      "PlaygroundComponent",
-      tree,
-      context,
-    );
+    const result = await generateComponent(componentName, tree, context);
+
     setGeneratedCode(result);
-    setCopied(false);
+
+    await navigator.clipboard.writeText(result);
+
+    setCopied(true);
+    setTimeout(() => setCopied(false), 1800);
   };
 
   const handleCopy = async () => {
@@ -80,15 +96,37 @@ function App() {
                 <p className='text-xs text-slate-500'>Paste your HTML here.</p>
               </div>
 
-              <span className='rounded-lg bg-slate-100 px-2.5 py-1 text-[11px] font-medium text-slate-600'>
-                HTML
-              </span>
+              <div className='flex items-center gap-3'>
+                <div className='flex items-center gap-2'>
+                  <label className='text-sm font-medium text-slate-500'>
+                    Component Name:
+                  </label>
+
+                  <input
+                    type='text'
+                    value={componentName}
+                    onChange={(e) => {
+                      setComponentName(e.target.value);
+                      if (html.trim()) {
+                        void generate();
+                      }
+                    }}
+                    placeholder='PlaygroundComponent'
+                    className='w-64 rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-100'
+                  />
+                </div>
+
+                <span className='rounded-lg bg-slate-100 px-2.5 py-1 text-[11px] font-medium text-slate-600'>
+                  HTML
+                </span>
+              </div>
             </div>
 
             <div className='flex min-h-0 flex-1 p-4'>
               <textarea
                 value={html}
                 onChange={(e) => setHtml(e.target.value)}
+                onBlur={generate}
                 placeholder={`<section>
   <h1>Hello World</h1>
   <p>This is my website.</p>

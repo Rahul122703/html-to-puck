@@ -3,6 +3,7 @@ import { toText } from "hast-util-to-text";
 
 import { type CompilerContext } from "../types";
 import { getUniqueName } from "../utils/naming";
+import { humanize } from "../utils/humanize";
 
 const TEXT_TAGS: Record<string, string> = {
   h1: "title",
@@ -38,10 +39,12 @@ export function visitText(tree: any, context: CompilerContext) {
 
     context.fields.push({
       name: fieldName,
+      propType: "string",
       config: {
+        label: humanize(fieldName),
         type: "richtext",
-        contentEditable: true,
       },
+      richTextImport: true,
       defaultValue: text,
     });
 

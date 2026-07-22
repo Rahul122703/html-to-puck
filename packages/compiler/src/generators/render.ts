@@ -2,7 +2,7 @@ import type { Element, Root, Text } from "hast";
 import { getOrCreateRootElement } from "../utils/getOrCreateRootElement";
 import { mergeProperties } from "../utils/mergeProperties";
 import { cssStringToJsxStyle } from "../utils/cssStringToJsxStyle";
-import { JsxExpression } from "../utils/jsx";
+import { CodeExpression } from "../utils/jsx";
 
 const VOID_ELEMENTS = new Set([
   "area",
@@ -32,29 +32,29 @@ export function generateRender(
   const root = getOrCreateRootElement(tree);
 
   mergeProperties(root, {
-    style: new JsxExpression(`{
-      position: "relative",
-      backgroundColor,
+    className: ["relative"],
+    style: new CodeExpression(`{
+    backgroundColor,
 
-      paddingTop: \`\${paddingTop}px\`,
-      paddingRight: \`\${paddingRight}px\`,
-      paddingBottom: \`\${paddingBottom}px\`,
-      paddingLeft: \`\${paddingLeft}px\`,
+    paddingTop: \`\${padding.top}px\`,
+    paddingRight: \`\${padding.right}px\`,
+    paddingBottom: \`\${padding.bottom}px\`,
+    paddingLeft: \`\${padding.left}px\`,
 
-      marginTop: \`\${marginTop}px\`,
-      marginRight: \`\${marginRight}px\`,
-      marginBottom: \`\${marginBottom}px\`,
-      marginLeft: \`\${marginLeft}px\`,
+    marginTop: \`\${margin.top}px\`,
+    marginRight: \`\${margin.right}px\`,
+    marginBottom: \`\${margin.bottom}px\`,
+    marginLeft: \`\${margin.left}px\`,
 
-      ...(showBackgroundImage && backgroundImage
-        ? {
-            backgroundImage: \`url(\${backgroundImage})\`,
-            backgroundSize: "cover",
-            backgroundPosition: "center",
-            backgroundRepeat: "no-repeat",
-          }
-        : {}),
-    }`),
+    ...(showBackgroundImage && backgroundImage
+      ? {
+          backgroundImage: \`url(\${backgroundImage})\`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          backgroundRepeat: "no-repeat",
+        }
+      : {}),
+  }`),
   });
 
   // Save existing children
@@ -83,10 +83,10 @@ export function generateRender(
   const props = fields.map((field) => `  ${field.name},`).join("\n");
 
   return `render: ({
-${props}
-}: ${componentName}Props) => (
-${indent(jsx, 2)}
-),`;
+  ${props}
+  }: ${componentName}Props) => (
+  ${indent(jsx, 2)}
+  ),`;
 }
 
 function print(node: any): string {
@@ -123,17 +123,14 @@ function printElement(node: Element): string {
 function printText(node: Text): string {
   if (node.value === "{{__ROOT_OVERLAY__}}") {
     return `{showBackgroundOverlay && (
-  <div
-    style={{
-      position: "absolute",
-      inset: 0,
-      backgroundColor: backgroundOverlayColor,
-      opacity: backgroundOverlayOpacity / 100,
-      pointerEvents: "none",
-      zIndex: 0,
-    }}
-  />
-)}`;
+      <div
+        className="pointer-events-none absolute inset-0 z-0"
+        style={{
+          backgroundColor: backgroundOverlayColor,
+          opacity: backgroundOverlayOpacity / 100,
+        }}
+      />
+    )}`;
   }
 
   return node.value.replace(/\{\{(.*?)\}\}/g, "{$1}");
@@ -160,16 +157,13 @@ function printProps(props: Record<string, any>) {
         key = "htmlFor";
       }
 
-      if (value instanceof JsxExpression) {
+      if (value instanceof CodeExpression) {
         return ` ${key}={${value.code}}`;
       }
 
       if (key === "style") {
         if (value === "__CONTENT_WRAPPER_STYLE__") {
-          return ` style={{
-            position: "relative",
-            zIndex: 1,
-          }}`;
+          return ` className="relative z-10"`;
         }
 
         if (key === "style" && typeof value === "string") {

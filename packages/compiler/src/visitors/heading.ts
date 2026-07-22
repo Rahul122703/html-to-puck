@@ -1,5 +1,6 @@
 import { visit } from "unist-util-visit";
 import { type CompilerContext } from "../types";
+import { humanize } from "../utils/humanize";
 
 export function visitHeadings(tree: any, context: CompilerContext) {
   let count = 1;
@@ -22,9 +23,12 @@ export function visitHeadings(tree: any, context: CompilerContext) {
 
     context.fields.push({
       name,
+      propType: "string",
       config: {
-        type: "text",
+        label: humanize(name),
+        type: "richtext",
       },
+      richTextImport: true,
       defaultValue: text,
     });
 
