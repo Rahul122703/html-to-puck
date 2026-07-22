@@ -4,6 +4,15 @@ import { CodeExpression } from "./utils/jsx";
 export const rootConfig: RootConfig = {
   fields: [
     {
+      name: "sectionId",
+      propType: "string",
+      config: {
+        label: "Section Id",
+        type: "text",
+      },
+      defaultValue: "",
+    },
+    {
       name: "backgroundColor",
       propType: "ColorValue",
       config: new CodeExpression(

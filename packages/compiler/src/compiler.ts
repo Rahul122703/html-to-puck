@@ -7,6 +7,7 @@ import { visitButtons } from "./visitors/button";
 import { sanitize } from "./utils/sanitizer";
 import { resetUniqueNames } from "./utils/naming";
 import { extractMotion } from "./utils/extractMotion";
+import { extractStyles } from "./utils/extractStyleCss";
 
 const visitors = [visitText, visitImages, visitLinks, visitButtons];
 
@@ -19,6 +20,8 @@ export function compile(html: string) {
 
   extractMotion(tree);
   console.log(tree);
+
+  const css = extractStyles(tree);
   sanitize(tree);
 
   const context = createContext();
@@ -27,12 +30,5 @@ export function compile(html: string) {
     visitor(tree, context);
   }
 
-  return { tree, context };
-
-  console.log(tree);
-
-  return {
-    tree,
-    context,
-  };
+  return { tree, context, css };
 }

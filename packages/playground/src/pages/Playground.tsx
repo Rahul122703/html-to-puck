@@ -24,8 +24,8 @@ function App() {
   }, [html, componentName]);
 
   const generate = async () => {
-    const { tree, context } = compile(html);
-    const result = await generateComponent(componentName, tree, context);
+    const { tree, context, css } = compile(html);
+    const result = await generateComponent(componentName, tree, context, css);
 
     setGeneratedCode(result);
 

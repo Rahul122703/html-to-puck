@@ -13,9 +13,10 @@ export async function generateComponent(
   componentName: string,
   tree: any,
   context: CompilerContext,
+  css: string,
 ) {
   const props = generateProps(context);
-  const render = generateRender(tree, componentName, context.fields);
+  const render = generateRender(tree, componentName, context.fields, css);
   const fields = generateFields(context);
 
   const imports = [`import { ComponentConfig } from "@puckeditor/core";`];

@@ -31,7 +31,6 @@ const ANIMATION_STYLE_PROPS = new Set([
   "transform",
   "filter",
   "transition",
-  "animation",
   "will-change",
 ]);
 

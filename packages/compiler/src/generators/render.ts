@@ -28,10 +28,18 @@ export function generateRender(
   tree: Root,
   componentName: string,
   fields: Field[],
+  css: string,
 ) {
   const root = getOrCreateRootElement(tree);
 
+  const style = css?.trim()
+    ? `<style>{\`
+      ${css}
+      \`}</style>\n`
+    : "";
+
   mergeProperties(root, {
+    id: "{{sectionId}}",
     className: ["relative"],
     style: new CodeExpression(`{
     backgroundColor,
@@ -85,7 +93,10 @@ export function generateRender(
   return `render: ({
   ${props}
   }: ${componentName}Props) => (
-  ${indent(jsx, 2)}
+    <>
+  ${style ? indent(style, 4) : ""}
+  ${indent(jsx, 4)}
+    </>
   ),`;
 }
 
