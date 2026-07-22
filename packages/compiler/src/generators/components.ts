@@ -7,6 +7,7 @@ import { CodeExpression } from "../utils/jsx";
 import { generateProps } from "./props";
 import { generateRender } from "./render";
 import { generateFields } from "./fields";
+import { needsMotion } from "../utils/needsMotion";
 
 export async function generateComponent(
   componentName: string,
@@ -19,55 +20,53 @@ export async function generateComponent(
 
   const imports = [`import { ComponentConfig } from "@puckeditor/core";`];
 
-  // Type imports
-  const typeImports: string[] = [];
-
-  if (context.fields.some((field) => field.propType === "ColorValue")) {
-    typeImports.push("ColorValue");
+  if (needsMotion(tree)) {
+    imports.push(`import { motion } from "motion/react";`);
   }
 
-  if (context.fields.some((field) => field.propType === "SpacingValue")) {
-    typeImports.push("SpacingValue");
+  const typeImports = new Set<string>();
+
+  for (const field of context.fields) {
+    if (field.propType) {
+      typeImports.add(field.propType);
+    }
   }
 
-  if (typeImports.length > 0) {
+  typeImports.delete("string");
+  typeImports.delete("boolean");
+  typeImports.delete("number");
+
+  if (typeImports.size > 0) {
     imports.push(
-      `import type { ${typeImports.join(", ")} } from "@/builder/types/customFields.types";`,
+      `import type { ${[...typeImports].join(", ")} } from "@/builder/types/customFields.types";`,
     );
   }
 
-  // Helper imports
   if (context.fields.some((field) => field.richTextImport)) {
     imports.push(
       `import { richTextNoHeading } from "@/builder/utils/richTextNoHeading";`,
     );
   }
 
-  const usesColorField = context.fields.some(
-    (field) =>
-      field.config instanceof CodeExpression &&
-      field.config.code.includes("createColorField"),
-  );
+  const helperImports = new Set<string>();
 
-  const usesSpacingField = context.fields.some(
-    (field) =>
-      field.config instanceof CodeExpression &&
-      field.config.code.includes("createSpacingField"),
-  );
+  for (const field of context.fields) {
+    if (!(field.config instanceof CodeExpression)) continue;
 
-  if (usesColorField || usesSpacingField) {
-    const helpers: string[] = [];
+    const code = field.config.code;
 
-    if (usesColorField) {
-      helpers.push("createColorField");
+    if (code.includes("createColorField")) {
+      helperImports.add("createColorField");
     }
 
-    if (usesSpacingField) {
-      helpers.push("createSpacingField");
+    if (code.includes("createSpacingField")) {
+      helperImports.add("createSpacingField");
     }
+  }
 
+  if (helperImports.size > 0) {
     imports.push(
-      `import { ${helpers.join(", ")} } from "@/builder/components/customFields";`,
+      `import { ${[...helperImports].join(", ")} } from "@/builder/components/customFields";`,
     );
   }
 

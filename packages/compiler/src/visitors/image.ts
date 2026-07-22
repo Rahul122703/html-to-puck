@@ -1,6 +1,7 @@
 import { visit } from "unist-util-visit";
 import { type CompilerContext } from "../types";
 import { getUniqueName } from "../utils/naming";
+import { humanize } from "../utils/humanize";
 
 export function visitImages(tree: any, context: CompilerContext) {
   visit(tree, "element", (node: any) => {
@@ -16,6 +17,7 @@ export function visitImages(tree: any, context: CompilerContext) {
         name,
         propType: "string",
         config: {
+          label: humanize(name),
           type: "text",
         },
         defaultValue: String(src),
@@ -31,6 +33,7 @@ export function visitImages(tree: any, context: CompilerContext) {
         name,
         propType: "string",
         config: {
+          label: humanize(name),
           type: "text",
         },
         defaultValue: String(alt),

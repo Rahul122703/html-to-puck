@@ -70,6 +70,7 @@ export const rootConfig: RootConfig = {
       name: "backgroundOverlayOpacity",
       propType: "number",
       config: {
+        label: "Background Overlay Opacity",
         type: "number",
         min: 0,
         max: 100,

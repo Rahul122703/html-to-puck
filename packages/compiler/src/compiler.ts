@@ -6,6 +6,7 @@ import { visitLinks } from "./visitors/link";
 import { visitButtons } from "./visitors/button";
 import { sanitize } from "./utils/sanitizer";
 import { resetUniqueNames } from "./utils/naming";
+import { extractMotion } from "./utils/extractMotion";
 
 const visitors = [visitText, visitImages, visitLinks, visitButtons];
 
@@ -16,12 +17,17 @@ export function compile(html: string) {
   console.log(tree);
   resetUniqueNames();
 
+  extractMotion(tree);
+  console.log(tree);
+  sanitize(tree);
+
   const context = createContext();
-  const cleanedTree = sanitize(tree);
 
   for (const visitor of visitors) {
-    visitor(cleanedTree, context);
+    visitor(tree, context);
   }
+
+  return { tree, context };
 
   console.log(tree);
 

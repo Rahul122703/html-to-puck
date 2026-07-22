@@ -33,3 +33,22 @@ export interface RootConfig {
 export interface CompilerContext {
   fields: Field[];
 }
+
+export type MotionType = "element" | "word" | "char" | "line";
+
+export interface MotionState {
+  opacity?: number;
+  x?: number;
+  y?: number;
+  scale?: number;
+  rotate?: number;
+  blur?: number;
+}
+
+export interface MotionConfig {
+  group?: string;
+  type: MotionType;
+
+  initial?: MotionState;
+  animate?: MotionState;
+}

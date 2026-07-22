@@ -108,7 +108,67 @@ function print(node: any): string {
   }
 }
 
+function printMotionProps(value: unknown): string {
+  if (typeof value !== "string") {
+    return "";
+  }
+
+  const motion = JSON.parse(value);
+
+  const initial: Record<string, unknown> = {};
+
+  if (motion.initial?.opacity !== undefined) {
+    initial.opacity = motion.initial.opacity;
+  }
+
+  if (motion.initial?.x !== undefined) {
+    initial.x = motion.initial.x;
+  }
+
+  if (motion.initial?.y !== undefined) {
+    initial.y = motion.initial.y;
+  }
+
+  if (motion.initial?.scale !== undefined) {
+    initial.scale = motion.initial.scale;
+  }
+
+  if (motion.initial?.rotate !== undefined) {
+    initial.rotate = motion.initial.rotate;
+  }
+
+  if (motion.initial?.blur !== undefined) {
+    initial.filter = `blur(${motion.initial.blur}px)`;
+  }
+
+  return `
+ initial={${JSON.stringify(initial, null, 2)}}
+ whileInView={{
+   opacity: 1,
+   x: 0,
+   y: 0,
+   scale: 1,
+   rotate: 0,
+   filter: "blur(0px)",
+ }}
+ viewport={{ once: true }}`;
+}
+
 function printElement(node: Element): string {
+  const motion = node.properties?.["data-motion"];
+
+  if (motion) {
+    const props = printProps({
+      ...node.properties,
+      "data-motion": undefined,
+    });
+
+    const motionProps = printMotionProps(motion);
+    const children = node.children.map(print).join("");
+
+    return `<motion.${node.tagName}${props}${motionProps}>${children}</motion.${node.tagName}>`;
+  }
+
   const tag = node.tagName;
   const props = printProps(node.properties ?? {});
   const children = node.children.map(print).join("");

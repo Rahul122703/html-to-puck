@@ -26,7 +26,14 @@ const WRAPPER_CLASSES = new Set([
   "animate-line",
 ]);
 
-const ANIMATION_STYLE_PROPS = new Set();
+const ANIMATION_STYLE_PROPS = new Set([
+  "opacity",
+  "transform",
+  "filter",
+  "transition",
+  "animation",
+  "will-change",
+]);
 
 interface UnwrapOperation {
   parent: Parent;
@@ -40,17 +47,37 @@ export function sanitize(tree: Root): Root {
   visit(tree, "element", (node: Element, index, parent) => {
     removeAnimationStyles(node);
 
-    if (parent && typeof index === "number" && isWrapper(node)) {
-      unwraps.push({
-        parent,
-        index,
-        children: [...node.children], // copy children
-      });
+    if (!parent || typeof index !== "number") {
+      return;
     }
+
+    if (!isWrapper(node)) {
+      return;
+    }
+
+    const children = [...node.children];
+
+    // Preserve motion metadata when unwrapping.
+    const motion = node.properties?.["data-motion"];
+
+    if (motion && children.length === 1 && children[0].type === "element") {
+      const child = children[0];
+
+      child.properties ??= {};
+
+      // Preserve child's own motion if already present.
+      if (!child.properties["data-motion"]) {
+        child.properties["data-motion"] = motion;
+      }
+    }
+
+    unwraps.push({
+      parent,
+      index,
+      children,
+    });
   });
 
-  // Apply mutations after traversal.
-  // Process in reverse so indices remain valid.
   unwraps
     .sort((a, b) => b.index - a.index)
     .forEach(({ parent, index, children }) => {
@@ -80,7 +107,9 @@ function isWrapperClass(className: string) {
 }
 
 function removeAnimationStyles(node: Element) {
-  if (!node.properties) return;
+  if (!node.properties) {
+    return;
+  }
 
   if (typeof node.properties.style === "string") {
     const cleaned = node.properties.style
@@ -100,7 +129,7 @@ function removeAnimationStyles(node: Element) {
     }
   }
 
+  // Preserve data-motion.
   delete node.properties["data-motion-id"];
-  delete node.properties["data-motion"];
   delete node.properties["data-splitting"];
 }
