@@ -45,10 +45,24 @@ export interface MotionState {
   blur?: number;
 }
 
+export interface MotionTransition {
+  duration?: number;
+  delay?: number;
+  easing?: string;
+  repeat?: number;
+  repeatDelay?: number;
+}
+
 export interface MotionConfig {
   group?: string;
   type: MotionType;
-
-  initial?: MotionState;
+  initial: MotionState;
   animate?: MotionState;
+  transition?: MotionTransition;
+}
+
+export interface MotionPreset {
+  initial?: Partial<MotionState>;
+  animate?: Partial<MotionState>;
+  transition?: Partial<MotionTransition>;
 }
