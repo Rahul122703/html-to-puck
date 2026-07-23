@@ -41,7 +41,7 @@ export function generateRender(
 
   mergeProperties(root, {
     id: "{{sectionId}}",
-    className: ["relative"],
+    className: ["relative", "py-3"],
     style: new CodeExpression(`{
     backgroundColor,
 
