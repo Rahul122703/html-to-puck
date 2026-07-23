@@ -8,6 +8,7 @@ import { sanitize } from "./utils/sanitizer";
 import { resetUniqueNames } from "./utils/naming";
 import { extractMotion } from "./utils/extractMotion";
 import { extractStyles } from "./utils/extractStyleCss";
+import { extractScripts } from "./utils/extractJs";
 
 const visitors = [visitText, visitImages, visitLinks, visitButtons];
 
@@ -21,6 +22,7 @@ export function compile(html: string) {
   extractMotion(tree);
   console.log(tree);
 
+  const js = extractScripts(tree);
   const css = extractStyles(tree);
   sanitize(tree);
 
@@ -30,5 +32,5 @@ export function compile(html: string) {
     visitor(tree, context);
   }
 
-  return { tree, context, css };
+  return { tree, context, css, js };
 }

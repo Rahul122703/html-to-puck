@@ -4,6 +4,7 @@ import { mergeProperties } from "../utils/mergeProperties";
 import { cssStringToJsxStyle } from "../utils/cssStringToJsxStyle";
 import { CodeExpression } from "../utils/jsx";
 import { normalizePropName } from "../utils/normailzeProps";
+import { normalizeScript } from "../utils/extractJs";
 
 const VOID_ELEMENTS = new Set([
   "area",
@@ -30,13 +31,26 @@ export function generateRender(
   componentName: string,
   fields: Field[],
   css: string,
+  js: string,
 ) {
   const root = getOrCreateRootElement(tree);
 
-  const style = css?.trim()
+  const style = css.trim()
     ? `<style>{\`
       ${css}
       \`}</style>\n`
+    : "";
+
+  const script = js.trim()
+    ? `<template data-builder-script>{\`
+      ${js}
+      \`}</template>\n`
+    : "";
+
+  const effect = js.trim()
+    ? `useEffect(() => {
+    ${indent(normalizeScript(js), 2)}
+    }, []);`
     : "";
 
   mergeProperties(root, {
@@ -93,12 +107,16 @@ export function generateRender(
 
   return `render: ({
   ${props}
-  }: ${componentName}Props) => (
-    <>
-  ${style ? indent(style, 4) : ""}
-  ${indent(jsx, 4)}
-    </>
-  ),`;
+  }: ${componentName}Props) => {
+  ${effect ? indent(effect.trim(), 2) + "\n\n" : ""}
+    return (
+      <>
+  ${style ? indent(style, 6) : ""}
+  ${script ? indent(script, 6) : ""}
+  ${indent(jsx, 6)}
+      </>
+    );
+  },`;
 }
 
 function print(node: any): string {

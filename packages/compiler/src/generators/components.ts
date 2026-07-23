@@ -14,12 +14,21 @@ export async function generateComponent(
   tree: any,
   context: CompilerContext,
   css: string,
+  js: string,
 ) {
   const props = generateProps(context);
-  const render = generateRender(tree, componentName, context.fields, css);
+  const render = generateRender(tree, componentName, context.fields, css, js);
   const fields = generateFields(context);
 
-  const imports = [`import { ComponentConfig } from "@puckeditor/core";`];
+  const imports: string[] = [];
+
+  imports.push(`"use client";\n`);
+
+  if (js.trim()) {
+    imports.push(`import { useEffect } from "react";`);
+  }
+
+  imports.push(`import { ComponentConfig } from "@puckeditor/core";`);
 
   if (needsMotion(tree)) {
     imports.push(`import { motion } from "motion/react";`);
