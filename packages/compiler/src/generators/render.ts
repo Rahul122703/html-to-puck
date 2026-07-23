@@ -3,6 +3,7 @@ import { getOrCreateRootElement } from "../utils/getOrCreateRootElement";
 import { mergeProperties } from "../utils/mergeProperties";
 import { cssStringToJsxStyle } from "../utils/cssStringToJsxStyle";
 import { CodeExpression } from "../utils/jsx";
+import { normalizePropName } from "../utils/normailzeProps";
 
 const VOID_ELEMENTS = new Set([
   "area",
@@ -210,23 +211,7 @@ function printText(node: Text): string {
 function printProps(props: Record<string, any>) {
   return Object.entries(props)
     .map(([key, value]) => {
-      // Convert ariaLabel -> aria-label
-      if (/^aria[A-Z]/.test(key)) {
-        key = key.replace(/[A-Z]/g, (m) => `-${m.toLowerCase()}`);
-      }
-
-      // Convert dataMotionId -> data-motion-id
-      if (/^data[A-Z]/.test(key)) {
-        key = key.replace(/[A-Z]/g, (m) => `-${m.toLowerCase()}`);
-      }
-
-      if (key === "class" || key === "className") {
-        key = "className";
-      }
-
-      if (key === "for") {
-        key = "htmlFor";
-      }
+      key = normalizePropName(key);
 
       if (value instanceof CodeExpression) {
         return ` ${key}={${value.code}}`;
@@ -237,7 +222,7 @@ function printProps(props: Record<string, any>) {
           return ` className="relative z-10"`;
         }
 
-        if (key === "style" && typeof value === "string") {
+        if (typeof value === "string") {
           return ` style={${cssStringToJsxStyle(value)}}`;
         }
       }

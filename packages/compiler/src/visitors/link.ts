@@ -16,6 +16,7 @@ export function visitLinks(tree: any, context: CompilerContext) {
         name: hrefName,
         propType: "string",
         config: {
+          label: humanize(hrefName) + " (Link)",
           type: "text",
         },
         defaultValue: String(href),

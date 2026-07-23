@@ -17,7 +17,7 @@ export function visitImages(tree: any, context: CompilerContext) {
         name,
         propType: "string",
         config: {
-          label: humanize(name),
+          label: humanize(name) + " (Url)",
           type: "text",
         },
         defaultValue: String(src),

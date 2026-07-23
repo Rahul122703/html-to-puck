@@ -22,9 +22,9 @@ for (const file of files) {
 
   const html = fs.readFileSync(input, "utf8");
 
-  const { tree, context } = compile(html);
+  const { tree, context, css } = compile(html);
 
-  const component = await generateComponent(componentName, tree, context);
+  const component = await generateComponent(componentName, tree, context, css);
 
   const output = path.join(OUTPUT_DIR, `${componentName}.tsx`);
 
